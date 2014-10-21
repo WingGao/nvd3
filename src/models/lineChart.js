@@ -208,10 +208,10 @@ nv.models.lineChart = function() {
       // Setup Axes
 
       if (showXAxis) {
-        xAxis
-          .scale(x)
-          .ticks( availableWidth / 100 )
-          .tickSize(-availableHeight, 0);
+          if(xAxis.ticks()==null)
+              xAxis.scale(x).ticks(availableWidth / 100);
+          else
+            xAxis.scale(x).tickSize(-availableHeight, 0);
 
         g.select('.nv-x.nv-axis')
             .attr('transform', 'translate(0,' + y.range()[0] + ')');
