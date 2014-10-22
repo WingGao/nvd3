@@ -33,6 +33,9 @@ nv.models.lineChart = function() {
     , noData = 'No Data Available.'
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState')
     , transitionDuration = 250
+    , pointFunc = function(){
+        return null;
+    }
     ;
 
   xAxis
@@ -200,7 +203,14 @@ nv.models.lineChart = function() {
           .datum(data.filter(function(d) { return !d.disabled }))
 
       linesWrap.transition().call(lines);
-
+      //Setup Points
+        var points =linesWrap.selectAll('.nv-point');
+        points.each(function(data){
+            var c = d3.select(this);
+            var p = d3.select(this.parentNode);
+            pointFunc(p, c.attr('cx'), c.attr('cy'), data);
+            c.remove();
+        });
       //------------------------------------------------------------
 
 
@@ -221,10 +231,10 @@ nv.models.lineChart = function() {
       }
 
       if (showYAxis) {
-        yAxis
-          .scale(y)
-          .ticks( availableHeight / 36 )
-          .tickSize( -availableWidth, 0);
+          if(yAxis.ticks()==null)
+              yAxis.scale(y).ticks(availableHeight / 36);
+          else
+              yAxis.scale(y).tickSize(-availableWidth, 0);
 
         g.select('.nv-y.nv-axis')
             .transition()
@@ -413,7 +423,11 @@ nv.models.lineChart = function() {
     yAxis.orient( (_) ? 'right' : 'left');
     return chart;
   };
-
+  chart.points = function(_){
+      if(!arguments.length) return pointFunc;
+      pointFunc = _;
+      return chart;
+  };
   chart.useInteractiveGuideline = function(_) {
     if(!arguments.length) return useInteractiveGuideline;
     useInteractiveGuideline = _;
