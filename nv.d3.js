@@ -1268,7 +1268,7 @@ nv.utils.optionsFunc = function(args) {
         g.selectAll('g') // the g's wrapping each tick
             .each(function(d,i) {
               d3.select(this).select('text').attr('opacity', 1);
-              d3.select(this).attr('class', 'nv-axis-'+d);
+              d3.select(this).attr('class', 'tick nv-axis-'+d);
               if (scale(d) < scale.range()[1] + 10 || scale(d) > scale.range()[0] - 10) { // 10 is assuming text height is 16... if d is 0, leave it!
                 if (d > 1e-10 || d < -1e-10) // accounts for minor floating point errors... though could be problematic if the scale is EXTREMELY SMALL
                   d3.select(this).attr('opacity', 0);
@@ -5605,7 +5605,7 @@ nv.models.lineChart = function() {
         points.each(function(data){
             var c = d3.select(this);
             var p = d3.select(this.parentNode);
-            pointFunc(p, c.attr('cx'), c.attr('cy'), data);
+            pointFunc(p, parseFloat(c.attr('cx')), parseFloat(c.attr('cy')), data);
             c.remove();
         });
       //------------------------------------------------------------
@@ -5617,8 +5617,7 @@ nv.models.lineChart = function() {
       if (showXAxis) {
           if(xAxis.ticks()==null)
               xAxis.scale(x).ticks(availableWidth / 100);
-          else
-            xAxis.scale(x).tickSize(-availableHeight, 0);
+          xAxis.scale(x).tickSize(-availableHeight, 0);
 
         g.select('.nv-x.nv-axis')
             .attr('transform', 'translate(0,' + y.range()[0] + ')');
@@ -5630,8 +5629,7 @@ nv.models.lineChart = function() {
       if (showYAxis) {
           if(yAxis.ticks()==null)
               yAxis.scale(y).ticks(availableHeight / 36);
-          else
-              yAxis.scale(y).tickSize(-availableWidth, 0);
+          yAxis.scale(y).tickSize(-availableWidth, 0);
 
         g.select('.nv-y.nv-axis')
             .transition()

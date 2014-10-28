@@ -208,7 +208,7 @@ nv.models.lineChart = function() {
         points.each(function(data){
             var c = d3.select(this);
             var p = d3.select(this.parentNode);
-            pointFunc(p, c.attr('cx'), c.attr('cy'), data);
+            pointFunc(p, parseFloat(c.attr('cx')), parseFloat(c.attr('cy')), data);
             c.remove();
         });
       //------------------------------------------------------------
@@ -220,8 +220,7 @@ nv.models.lineChart = function() {
       if (showXAxis) {
           if(xAxis.ticks()==null)
               xAxis.scale(x).ticks(availableWidth / 100);
-          else
-            xAxis.scale(x).tickSize(-availableHeight, 0);
+          xAxis.scale(x).tickSize(-availableHeight, 0);
 
         g.select('.nv-x.nv-axis')
             .attr('transform', 'translate(0,' + y.range()[0] + ')');
@@ -233,8 +232,7 @@ nv.models.lineChart = function() {
       if (showYAxis) {
           if(yAxis.ticks()==null)
               yAxis.scale(y).ticks(availableHeight / 36);
-          else
-              yAxis.scale(y).tickSize(-availableWidth, 0);
+          yAxis.scale(y).tickSize(-availableWidth, 0);
 
         g.select('.nv-y.nv-axis')
             .transition()
